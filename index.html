@@ -5,559 +5,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Святе Писання - Онлайн читалка</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            min-height: 100vh;
-            color: #333;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            color: #1e3c72;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .header p {
-            color: #666;
-            font-size: 1.1em;
-        }
-
-        .controls {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .control-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .control-group label {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #1e3c72;
-        }
-
-        select, input {
-            padding: 12px;
-            border: 2px solid #e0e6ed;
-            border-radius: 10px;
-            font-size: 16px;
-            background: white;
-            transition: all 0.3s ease;
-        }
-
-        select:focus, input:focus {
-            outline: none;
-            border-color: #2a5298;
-            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
-        }
-
-        .search-group {
-            grid-column: 1 / -1;
-            display: flex;
-            gap: 10px;
-        }
-
-        .search-group input {
-            flex: 1;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .content {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            min-height: 400px;
-        }
-
-        .verse {
-            margin-bottom: 15px;
-            padding: 15px;
-            background: rgba(30, 60, 114, 0.05);
-            border-left: 4px solid #2a5298;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .verse:hover {
-            background: rgba(30, 60, 114, 0.08);
-            transform: translateX(5px);
-        }
-
-        .verse-number {
-            font-weight: bold;
-            color: #1e3c72;
-            margin-right: 10px;
-            font-size: 0.9em;
-        }
-
-        .verse-text {
-            line-height: 1.6;
-            font-size: 1.1em;
-        }
-
-        .chapter-title {
-            font-size: 1.8em;
-            color: #1e3c72;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 700;
-        }
-
-        .loading {
-            text-align: center;
-            color: #666;
-            font-style: italic;
-            padding: 40px;
-        }
-
-        .error {
-            background: #fee;
-            color: #c33;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 4px solid #c33;
-        }
-
-        .search-result {
-            background: #fff9c4;
-            border-left: 4px solid #f39c12;
-        }
-
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-            gap: 10px;
-        }
-
-        .nav-btn {
-            padding: 10px 20px;
-            background: rgba(30, 60, 114, 0.1);
-            border: 2px solid #2a5298;
-            color: #1e3c72;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .nav-btn:hover {
-            background: #2a5298;
-            color: white;
-        }
-
-        .nav-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .header h1 {
-                font-size: 2em;
-            }
-            
-            .controls {
-                grid-template-columns: 1fr;
-            }
-            
-            .search-group {
-                flex-direction: column;
-            }
-        }
+        * {margin:0;padding:0;box-sizing:border-box;}
+        body {font-family:'Segoe UI',Tahoma,sans-serif;background:linear-gradient(135deg,#1e3c72 0%,#2a5298 100%);min-height:100vh;color:#333;}
+        .container {max-width:1200px;margin:0 auto;padding:20px;}
+        .header {background:rgba(255,255,255,0.95);border-radius:20px;padding:30px;margin-bottom:30px;box-shadow:0 8px 32px rgba(0,0,0,0.1);text-align:center;}
+        .header h1 {font-size:2.5em;color:#1e3c72;margin-bottom:10px;font-weight:700;}
+        .header p {color:#666;font-size:1.1em;}
+        .controls {background:rgba(255,255,255,0.9);border-radius:15px;padding:25px;margin-bottom:25px;box-shadow:0 4px 20px rgba(0,0,0,0.1);display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;}
+        .control-group {display:flex;flex-direction:column;}
+        .control-group label {font-weight:600;margin-bottom:8px;color:#1e3c72;}
+        select,input {padding:12px;border:2px solid #e0e6ed;border-radius:10px;font-size:16px;background:white;transition:all 0.3s ease;}
+        select:focus,input:focus {outline:none;border-color:#2a5298;box-shadow:0 0 0 3px rgba(42,82,152,0.1);}
+        .search-group {grid-column:1/-1;display:flex;gap:10px;}
+        .search-group input {flex:1;}
+        .btn {padding:12px 24px;background:linear-gradient(135deg,#1e3c72,#2a5298);color:white;border:none;border-radius:10px;cursor:pointer;font-size:16px;font-weight:600;transition:all 0.3s ease;}
+        .btn:hover {transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,0.2);}
+        .content {background:rgba(255,255,255,0.95);border-radius:15px;padding:30px;box-shadow:0 8px 32px rgba(0,0,0,0.1);min-height:400px;}
+        .verse {margin-bottom:15px;padding:15px;background:rgba(30,60,114,0.05);border-left:4px solid #2a5298;border-radius:8px;transition:all 0.3s ease;display:flex;align-items:flex-start;justify-content:space-between;}
+        .verse:hover {background:rgba(30,60,114,0.08);}
+        .verse-number {font-weight:bold;color:#1e3c72;margin-right:10px;font-size:0.9em;}
+        .verse-text {line-height:1.6;font-size:1.1em;flex:1;}
+        .chapter-title {font-size:1.8em;color:#1e3c72;margin-bottom:20px;text-align:center;font-weight:700;}
+        .navigation {display:flex;justify-content:space-between;margin-top:20px;gap:10px;}
+        .nav-btn {padding:10px 20px;background:rgba(30,60,114,0.1);border:2px solid #2a5298;color:#1e3c72;border-radius:8px;cursor:pointer;font-weight:600;}
+        .nav-btn:hover {background:#2a5298;color:white;}
+        .bookmark-btn {background:none;border:none;font-size:18px;cursor:pointer;margin-left:10px;color:#999;}
+        .bookmark-btn.active {color:gold;}
+        .bookmarks-panel {background:rgba(255,255,255,0.9);border-radius:10px;padding:10px;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,0.1);}
+        .bookmark-item {padding:5px 10px;cursor:pointer;border-radius:5px;}
+        .bookmark-item:hover {background:rgba(30,60,114,0.1);}
+        @media (max-width:768px){.controls{grid-template-columns:1fr;}.search-group{flex-direction:column;}}
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>✝️ Святе Писання</h1>
-            <p>Читайте Слово Боже онлайн</p>
+<div class="container">
+    <div class="header">
+        <h1>✝️ Святе Писання</h1>
+        <p>Читайте Слово Боже онлайн</p>
+    </div>
+    <div class="controls">
+        <div class="control-group">
+            <label for="bookSelect">Книга:</label>
+            <select id="bookSelect"><option value="">Оберіть книгу...</option></select>
         </div>
-
-        <div class="controls">
-            <div class="control-group">
-                <label for="bookSelect">Книга:</label>
-                <select id="bookSelect">
-                    <option value="">Оберіть книгу...</option>
-                </select>
-            </div>
-            
-            <div class="control-group">
-                <label for="chapterSelect">Розділ:</label>
-                <select id="chapterSelect" disabled>
-                    <option value="">Спочатку оберіть книгу</option>
-                </select>
-            </div>
-
-            <div class="search-group">
-                <input type="text" id="searchInput" placeholder="Пошук по тексту Святого Писання...">
-                <button class="btn" onclick="searchBible()">Знайти</button>
-                <button class="btn" onclick="clearSearch()">Очистити</button>
-            </div>
+        <div class="control-group">
+            <label for="chapterSelect">Розділ:</label>
+            <select id="chapterSelect" disabled><option value="">Спочатку оберіть книгу</option></select>
         </div>
-
-        <div class="content" id="content">
-            <div class="loading">
-                📖 Завантаження Святого Писання...<br>
-                <small>Переконайтесь, що файл bible_ua.json знаходиться в тій же папці</small>
-            </div>
+        <div class="search-group">
+            <input type="text" id="searchInput" placeholder="Пошук по тексту Святого Писання...">
+            <button class="btn" onclick="searchBible()">Знайти</button>
+            <button class="btn" onclick="clearSearch()">Очистити</button>
         </div>
     </div>
 
-    <script>
-        // BibleAPI з вашого файлу
-        const BibleAPI = {
-            data: [],
+    <div class="bookmarks-panel" id="bookmarksPanel">
+        <strong>⭐ Закладки:</strong>
+        <div id="bookmarksList" style="margin-top:5px;"></div>
+    </div>
 
-            async load(url) {
-                const response = await fetch(url);
-                this.data = await response.json();
-                return this.data;
-            },
+    <div class="content" id="content">
+        <div class="loading">📖 Завантаження Святого Писання...</div>
+    </div>
+</div>
 
-            getBooks() {
-                return this.data.map(book => ({
-                    number: book.number,
-                    shortName: book.shortName,
-                    name: book.name
-                }));
-            },
+<script>
+const BibleAPI = {
+    data: [],
+    async load(url){const r=await fetch(url);this.data=await r.json();return this.data;},
+    getBooks(){return this.data.map(b=>({number:b.number,shortName:b.shortName,name:b.name}));},
+    getChapters(n){const b=this.data.find(x=>x.number===String(n));return b?b.chapters.map(c=>c.number):[];},
+    getVerses(bn,cn){const b=this.data.find(x=>x.number===String(bn));if(!b)return[];const ch=b.chapters.find(c=>c.number===String(cn));return ch?ch.verses:[];}
+};
 
-            getChapters(bookNumber) {
-                const book = this.data.find(b => b.number === String(bookNumber));
-                return book ? book.chapters.map(ch => ch.number) : [];
-            },
+let currentBook=null,currentChapter=null,isSearchMode=false;
+let bookmarks = JSON.parse(localStorage.getItem("bibleBookmarks")||"[]");
 
-            getVerses(bookNumber, chapterNumber) {
-                const book = this.data.find(b => b.number === String(bookNumber));
-                if (!book) return [];
-                const chapter = book.chapters.find(ch => ch.number === String(chapterNumber));
-                return chapter ? chapter.verses : [];
-            },
+function saveBookmarks(){localStorage.setItem("bibleBookmarks",JSON.stringify(bookmarks));renderBookmarks();}
 
-            getVerse(bookNumber, chapterNumber, verseNumber) {
-                return this.getVerses(bookNumber, chapterNumber)
-                    .find(v => v.number === String(verseNumber)) || null;
-            },
+function toggleBookmark(bookNum,chapterNum,verseNum,bookName,text){
+    const id=`${bookNum}-${chapterNum}-${verseNum}`;
+    const idx=bookmarks.findIndex(b=>b.id===id);
+    if(idx>=0){bookmarks.splice(idx,1);}else{bookmarks.push({id,bookNum,chapterNum,verseNum,bookName,text});}
+    saveBookmarks();
+    if(!isSearchMode) loadChapter();
+}
 
-            search(query) {
-                const results = [];
-                const q = query.toLowerCase();
-                for (const book of this.data) {
-                    for (const chapter of book.chapters) {
-                        for (const verse of chapter.verses) {
-                            if (verse.text.toLowerCase().includes(q)) {
-                                results.push({
-                                    book: book.name,
-                                    bookNumber: book.number,
-                                    chapter: chapter.number,
-                                    verse: verse.number,
-                                    text: verse.text
-                                });
-                            }
-                        }
-                    }
-                }
-                return results;
-            }
+function renderBookmarks(){
+    const list=document.getElementById("bookmarksList");
+    if(bookmarks.length===0){
+        list.innerHTML="<em>Немає закладок</em>";
+        return;
+    }
+    list.innerHTML="";
+    bookmarks.forEach(b=>{
+        const div=document.createElement("div");
+        div.className="bookmark-item";
+        
+        const textSpan=document.createElement("span");
+        textSpan.textContent=`${b.bookName} ${b.chapterNum}:${b.verseNum} — ${b.text.slice(0,40)}...`;
+        textSpan.style.flex="1";
+        textSpan.onclick=()=>{
+            currentBook=b.bookNum;
+            currentChapter=b.chapterNum;
+            updateSelectors();
+            loadChapter(()=>{
+                document.getElementById(`verse-${b.verseNum}`)
+                    ?.scrollIntoView({behavior:"smooth",block:"center"});
+            });
         };
 
-        // Глобальные переменные
-        let currentBook = null;
-        let currentChapter = null;
-        let searchResults = [];
-        let isSearchMode = false;
+        const delBtn=document.createElement("button");
+        delBtn.textContent="❌";
+        delBtn.style.border="none";
+        delBtn.style.background="none";
+        delBtn.style.cursor="pointer";
+        delBtn.style.marginLeft="10px";
+        delBtn.onclick=(e)=>{
+            e.stopPropagation();
+            bookmarks = bookmarks.filter(x=>x.id!==b.id);
+            saveBookmarks();
+        };
 
-        // Инициализация
-        async function init() {
-            try {
-                await BibleAPI.load('bible_ua.json');
-                loadBooks();
-                showWelcome();
-            } catch (error) {
-                showError('Помилка завантаження: ' + error.message);
-            }
-        }
+        div.style.display="flex";
+        div.style.alignItems="center";
+        div.appendChild(textSpan);
+        div.appendChild(delBtn);
+        list.appendChild(div);
+    });
+}
 
-        function showError(message) {
-            document.getElementById('content').innerHTML = `
-                <div class="error">
-                    ❌ ${message}<br><br>
-                    Перевірте, чи знаходиться файл <strong>bible_ua.json</strong> в тій же папці що і ця сторінка.<br>
-                    Також переконайтесь, що ви запустили Chrome з відключеним CORS.
-                </div>
-            `;
-        }
 
-        function showWelcome() {
-            document.getElementById('content').innerHTML = `
-                <div style="text-align: center; padding: 40px;">
-                    <h2 style="color: #1e3c72; margin-bottom: 20px;">Вітаємо в онлайн читалці Біблії! 📖</h2>
-                    <p style="font-size: 1.2em; line-height: 1.6; color: #666;">
-                        ✨ Оберіть книгу та розділ зверху, щоб почати читання<br>
-                        🔍 Використовуйте пошук для знаходження конкретних віршів<br>
-                        📚 Завантажено <strong>${BibleAPI.data.length}</strong> книг Святого Писання
-                    </p>
-                </div>
-            `;
-        }
-
-        function loadBooks() {
-            const bookSelect = document.getElementById('bookSelect');
-            const books = BibleAPI.getBooks();
-            
-            bookSelect.innerHTML = '<option value="">Оберіть книгу...</option>';
-            books.forEach(book => {
-                const option = document.createElement('option');
-                option.value = book.number;
-                option.textContent = book.name;
-                bookSelect.appendChild(option);
-            });
-        }
-
-        function loadChapters() {
-            const bookNumber = document.getElementById('bookSelect').value;
-            const chapterSelect = document.getElementById('chapterSelect');
-            
-            if (!bookNumber) {
-                chapterSelect.innerHTML = '<option value="">Спочатку оберіть книгу</option>';
-                chapterSelect.disabled = true;
-                return;
-            }
-
-            const chapters = BibleAPI.getChapters(bookNumber);
-            chapterSelect.innerHTML = '<option value="">Оберіть розділ...</option>';
-            chapters.forEach(chapterNum => {
-                const option = document.createElement('option');
-                option.value = chapterNum;
-                option.textContent = `Розділ ${chapterNum}`;
-                chapterSelect.appendChild(option);
-            });
-            
-            chapterSelect.disabled = false;
-            currentBook = bookNumber;
-        }
-
-        function loadChapter() {
-            const bookNumber = document.getElementById('bookSelect').value;
-            const chapterNumber = document.getElementById('chapterSelect').value;
-            
-            if (!bookNumber || !chapterNumber) return;
-            
-            isSearchMode = false;
-            currentBook = bookNumber;
-            currentChapter = chapterNumber;
-            
-            const book = BibleAPI.data.find(b => b.number === String(bookNumber));
-            const verses = BibleAPI.getVerses(bookNumber, chapterNumber);
-            
-            let html = `
-                <div class="chapter-title">${book.name} ${chapterNumber}</div>
-                <div class="navigation">
-                    <button class="nav-btn" onclick="previousChapter()" ${!canGoPrevious() ? 'disabled' : ''}>
-                        ← Попередній розділ
-                    </button>
-                    <button class="nav-btn" onclick="nextChapter()" ${!canGoNext() ? 'disabled' : ''}>
-                        Наступний розділ →
-                    </button>
-                </div>
-            `;
-            
-            verses.forEach(verse => {
-                html += `
-                    <div class="verse">
-                        <span class="verse-number">${verse.number}</span>
-                        <span class="verse-text">${verse.text}</span>
-                    </div>
-                `;
-            });
-            
-            document.getElementById('content').innerHTML = html;
-        }
-
-        function searchBible() {
-            const query = document.getElementById('searchInput').value.trim();
-            if (!query) return;
-            
-            isSearchMode = true;
-            searchResults = BibleAPI.search(query);
-            
-            if (searchResults.length === 0) {
-                document.getElementById('content').innerHTML = `
-                    <div style="text-align: center; padding: 40px;">
-                        <h3>🔍 Результати пошуку</h3>
-                        <p>На жаль, за запитом "<strong>${query}</strong>" нічого не знайдено.</p>
-                        <p>Спробуйте інші слова або фрази.</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            let html = `
-                <div class="chapter-title">🔍 Знайдено: ${searchResults.length} віршів</div>
-                <p style="text-align: center; margin-bottom: 30px; color: #666;">
-                    Результати пошуку за запитом: "<strong>${query}</strong>"
-                </p>
-            `;
-            
-            searchResults.forEach(result => {
-                const highlightedText = result.text.replace(
-                    new RegExp(query, 'gi'), 
-                    `<mark style="background: #ffeb3b; padding: 2px 4px; border-radius: 3px;">$&</mark>`
-                );
-                
-                html += `
-                    <div class="verse search-result">
-                        <div style="font-weight: bold; color: #1e3c72; margin-bottom: 5px;">
-                            ${result.book} ${result.chapter}:${result.verse}
-                        </div>
-                        <span class="verse-text">${highlightedText}</span>
-                    </div>
-                `;
-            });
-            
-            document.getElementById('content').innerHTML = html;
-        }
-
-        function clearSearch() {
-            document.getElementById('searchInput').value = '';
-            if (isSearchMode) {
-                isSearchMode = false;
-                if (currentBook && currentChapter) {
-                    loadChapter();
-                } else {
-                    showWelcome();
-                }
-            }
-        }
-
-        function canGoPrevious() {
-            if (!currentBook || !currentChapter) return false;
-            const chapters = BibleAPI.getChapters(currentBook);
-            const currentIndex = chapters.indexOf(String(currentChapter));
-            return currentIndex > 0 || parseInt(currentBook) > 1;
-        }
-
-        function canGoNext() {
-            if (!currentBook || !currentChapter) return false;
-            const chapters = BibleAPI.getChapters(currentBook);
-            const currentIndex = chapters.indexOf(String(currentChapter));
-            return currentIndex < chapters.length - 1 || parseInt(currentBook) < BibleAPI.data.length;
-        }
-
-        function previousChapter() {
-            if (!canGoPrevious()) return;
-            
-            const chapters = BibleAPI.getChapters(currentBook);
-            const currentIndex = chapters.indexOf(String(currentChapter));
-            
-            if (currentIndex > 0) {
-                // Previous chapter in same book
-                currentChapter = chapters[currentIndex - 1];
-            } else {
-                // Last chapter of previous book
-                const prevBookNumber = String(parseInt(currentBook) - 1);
-                const prevChapters = BibleAPI.getChapters(prevBookNumber);
-                currentBook = prevBookNumber;
-                currentChapter = prevChapters[prevChapters.length - 1];
-            }
-            
-            updateSelectors();
-            loadChapter();
-        }
-
-        function nextChapter() {
-            if (!canGoNext()) return;
-            
-            const chapters = BibleAPI.getChapters(currentBook);
-            const currentIndex = chapters.indexOf(String(currentChapter));
-            
-            if (currentIndex < chapters.length - 1) {
-                // Next chapter in same book
-                currentChapter = chapters[currentIndex + 1];
-            } else {
-                // First chapter of next book
-                const nextBookNumber = String(parseInt(currentBook) + 1);
-                currentBook = nextBookNumber;
-                currentChapter = "1";
-            }
-            
-            updateSelectors();
-            loadChapter();
-        }
-
-        function updateSelectors() {
-            document.getElementById('bookSelect').value = currentBook;
-            loadChapters();
-            document.getElementById('chapterSelect').value = currentChapter;
-        }
-
-        // Event listeners
-        document.getElementById('bookSelect').addEventListener('change', loadChapters);
-        document.getElementById('chapterSelect').addEventListener('change', loadChapter);
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                searchBible();
-            }
-        });
-
-        // Запуск приложения
-        init();
-    </script>
+function init(){BibleAPI.load('bible_ua.json').then(()=>{loadBooks();showWelcome();renderBookmarks();}).catch(e=>showError(e.message));}
+function showError(m){document.getElementById('content').innerHTML=`<div class="error">❌ ${m}</div>`;}
+function showWelcome(){document.getElementById('content').innerHTML=`<div style="text-align:center;padding:40px;">Оберіть книгу та розділ</div>`;}
+function loadBooks(){const s=document.getElementById('bookSelect');s.innerHTML='<option value="">Оберіть книгу...</option>';BibleAPI.getBooks().forEach(b=>{const o=document.createElement('option');o.value=b.number;o.textContent=b.name;s.appendChild(o);});}
+function loadChapters(){const bn=document.getElementById('bookSelect').value;const s=document.getElementById('chapterSelect');if(!bn){s.innerHTML='<option value="">Спочатку оберіть книгу</option>';s.disabled=true;return;}const chs=BibleAPI.getChapters(bn);s.innerHTML='<option value="">Оберіть розділ...</option>';chs.forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=`Розділ ${n}`;s.appendChild(o);});s.disabled=false;currentBook=bn;}
+function loadChapter(cb){const bn=document.getElementById('bookSelect').value;const cn=document.getElementById('chapterSelect').value;if(!bn||!cn)return;currentBook=bn;currentChapter=cn;const book=BibleAPI.data.find(b=>b.number===String(bn));const verses=BibleAPI.getVerses(bn,cn);let html=`<div class="chapter-title">${book.name} ${cn}</div>`;verses.forEach(v=>{const id=`${bn}-${cn}-${v.number}`;const active=bookmarks.some(b=>b.id===id);html+=`<div class="verse" id="verse-${v.number}"><span class="verse-number">${v.number}</span><span class="verse-text">${v.text}</span><button class="bookmark-btn ${active?"active":""}" onclick="toggleBookmark('${bn}','${cn}','${v.number}','${book.name}',\`${v.text.replace(/`/g,"\\`")}\`)">${active?"★":"☆"}</button></div>`;});document.getElementById('content').innerHTML=html;if(cb)cb();}
+function updateSelectors(){document.getElementById('bookSelect').value=currentBook;loadChapters();document.getElementById('chapterSelect').value=currentChapter;}
+document.getElementById('bookSelect').addEventListener('change',loadChapters);
+document.getElementById('chapterSelect').addEventListener('change',()=>loadChapter());
+init();
+</script>
 </body>
 </html>
+
