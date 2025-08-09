@@ -76,14 +76,51 @@ let lastOpened=JSON.parse(localStorage.getItem("bibleLastOpened")||"null");
 function saveBookmarks(){localStorage.setItem("bibleBookmarks",JSON.stringify(bookmarks));renderBookmarks();}
 function saveLastOpened(){localStorage.setItem("bibleLastOpened",JSON.stringify({bookNum:currentBook,chapterNum:currentChapter}));}
 function toggleBookmark(bookNum,chapterNum,verseNum,bookName,text){const id=`${bookNum}-${chapterNum}-${verseNum}`;const idx=bookmarks.findIndex(b=>b.id===id);if(idx>=0){bookmarks.splice(idx,1);}else{bookmarks.push({id,bookNum,chapterNum,verseNum,bookName,text});}saveBookmarks();loadChapter();}
-function renderBookmarks(){const list=document.getElementById("bookmarksList");if(bookmarks.length===0){list.innerHTML="<em>Немає закладок</em>";return;}list.innerHTML="";bookmarks.forEach(b=>{const div=document.createElement("div");div.className="bookmark-item";div.textContent=`${b.bookName} ${b.chapterNum}:${b.verseNum} — ${b.text.slice(0,40)}...`;div.onclick=()=>{currentBook=b.bookNum;currentChapter=b.chapterNum;updateSelectors();loadChapter(()=>{document.getElementById(`verse-${b.verseNum}`)?.scrollIntoView({behavior:"smooth",block:"center"});});};list.appendChild(div);});}
+function renderBookmarks(){
+    const list=document.getElementById("bookmarksList");
+    if(bookmarks.length===0){
+        list.innerHTML="<em>Немає закладок</em>";
+        return;
+    }
+    list.innerHTML="";
+    bookmarks.forEach(b=>{
+        const div=document.createElement("div");
+        div.className="bookmark-item";
+        
+        const text=document.createElement("span");
+        text.textContent=`${b.bookName} ${b.chapterNum}:${b.verseNum} — ${b.text.slice(0,40)}...`;
+        text.style.cursor="pointer";
+        text.onclick=()=>{
+            currentBook=b.bookNum;
+            currentChapter=b.chapterNum;
+            updateSelectors();
+            loadChapter(()=>{
+                document.getElementById(`verse-${b.verseNum}`)?.scrollIntoView({behavior:"smooth",block:"center"});
+            });
+        };
+
+        const del=document.createElement("button");
+        del.textContent="❌";
+        del.style.cssText="background:none;border:none;color:red;font-size:14px;cursor:pointer;margin-left:8px;";
+        del.onclick=(e)=>{
+            e.stopPropagation();
+            bookmarks=bookmarks.filter(x=>x.id!==b.id);
+            saveBookmarks();
+        };
+
+        div.appendChild(text);
+        div.appendChild(del);
+        list.appendChild(div);
+    });
+}
+
 function init(){BibleAPI.load('bible_ua.json').then(()=>{loadBooks();renderBookmarks();if(lastOpened){currentBook=lastOpened.bookNum;currentChapter=lastOpened.chapterNum;updateSelectors();loadChapter();}else{showWelcome();}}).catch(e=>showError(e.message));}
 function showError(m){document.getElementById('content').innerHTML=`<div class="error">❌ ${m}</div>`;}
 function showWelcome(){document.getElementById('content').innerHTML=`<div style="text-align:center;padding:40px;">Оберіть книгу та розділ</div>`;}
 function loadBooks(){const s=document.getElementById('bookSelect');s.innerHTML='<option value="">Оберіть книгу...</option>';BibleAPI.getBooks().forEach(b=>{const o=document.createElement('option');o.value=b.number;o.textContent=b.name;s.appendChild(o);});}
 function loadChapters(){const bn=document.getElementById('bookSelect').value;const s=document.getElementById('chapterSelect');if(!bn){s.innerHTML='<option value="">Спочатку оберіть книгу</option>';s.disabled=true;return;}const chs=BibleAPI.getChapters(bn);s.innerHTML='<option value="">Оберіть розділ...</option>';chs.forEach(n=>{const o=document.createElement('option');o.value=n;o.textContent=`Розділ ${n}`;s.appendChild(o);});s.disabled=false;currentBook=bn;}
-function loadChapter(cb){if(!currentBook||!currentChapter)return;const book=BibleAPI.data.find(b=>b.number===String(currentBook));const verses=BibleAPI.getVerses(currentBook,currentChapter);let html=`<div class="chapter-title">${book.name} ${currentChapter}</div>${navHTML()}<div>`;verses.forEach(v=>{const id=`${currentBook}-${currentChapter}-${v.number}`;const active=bookmarks.some(b=>b.id===id);html+=`<div class="verse" id="verse-${v.number}"><span class="verse-number">${v.number}</span><span class="verse-text">${v.text}</span><button class="bookmark-btn ${active?"active":""}" onclick="toggleBookmark('${currentBook}','${currentChapter}','${v.number}','${book.name}',\`${v.text.replace(/`/g,"\\`")}\`)">${active?"★":"☆"}</button></div>`;});html+=`</div>${navHTML()}<div style="text-align:right;margin-top:10px;"><button class="top-btn" onclick="scrollToTop()">⬆ На початок</button></div>`;document.getElementById('content').innerHTML=html;saveLastOpened();if(cb)cb();}
-function navHTML(){return `<div class="navigation"><button class="nav-btn" onclick="prevChapter()">← Попередній</button><button class="nav-btn" onclick="nextChapter()">Наступний →</button></div>`;}
+function loadChapter(cb){if(!currentBook||!currentChapter)return;const book=BibleAPI.data.find(b=>b.number===String(currentBook));const verses=BibleAPI.getVerses(currentBook,currentChapter);let html=`<div class="chapter-title">${book.name} ${currentChapter}</div>${navHTML()}<div>`;verses.forEach(v=>{const id=`${currentBook}-${currentChapter}-${v.number}`;const active=bookmarks.some(b=>b.id===id);html+=`<div class="verse" id="verse-${v.number}"><span class="verse-number">${v.number}</span><span class="verse-text">${v.text}</span><button class="bookmark-btn ${active?"active":""}" onclick="toggleBookmark('${currentBook}','${currentChapter}','${v.number}','${book.name}',\`${v.text.replace(/`/g,"\\`")}\`)">${active?"★":"☆"}</button></div>`;});html+=`</div>${navHTML()}<div style="text-align:right;margin-top:10px;"><button class="top-btn" onclick="scrollToTop()">⬆</button></div>`;document.getElementById('content').innerHTML=html;saveLastOpened();if(cb)cb();}
+function navHTML(){return `<div class="navigation"><button class="nav-btn" onclick="prevChapter()">←</button><button class="nav-btn" onclick="nextChapter()">→</button></div>`;}
 function prevChapter(){const chs=BibleAPI.getChapters(currentBook);let idx=chs.indexOf(String(currentChapter));if(idx>0){currentChapter=chs[idx-1];}else if(parseInt(currentBook)>1){currentBook=String(parseInt(currentBook)-1);const prevCh=BibleAPI.getChapters(currentBook);currentChapter=prevCh[prevCh.length-1];}updateSelectors();loadChapter();}
 function nextChapter(){const chs=BibleAPI.getChapters(currentBook);let idx=chs.indexOf(String(currentChapter));if(idx<chs.length-1){currentChapter=chs[idx+1];}else if(parseInt(currentBook)<BibleAPI.data.length){currentBook=String(parseInt(currentBook)+1);currentChapter="1";}updateSelectors();loadChapter();}
 function scrollToTop(){window.scrollTo({top:0,behavior:"smooth"});}
