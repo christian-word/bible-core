@@ -3,15 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Біблія (українська)</title>
-<style>
-body { font-family: sans-serif; margin: 20px; background: #f8f8f8; }
-select, input { font-size: 1rem; margin: 5px 0; padding: 5px; }
-.verse { margin: 3px 0; padding: 3px; }
-.verse span { color: #555; font-weight: bold; margin-right: 5px; }
-#results { margin-top: 15px; }
-.search-result { border-bottom: 1px solid #ccc; padding: 5px 0; }
-
-</style>
+<link rel="stylesheet" href="bible.css">
 </head>
 <body>
 
@@ -33,5 +25,71 @@ select, input { font-size: 1rem; margin: 5px 0; padding: 5px; }
 <div id="results"></div>
 
 <script src="bible.js"></script>
+<script>
+async function init() {
+    await BibleAPI.load("bible_ua.json");
+
+    const bookSelect = document.getElementById("bookSelect");
+    const chapterSelect = document.getElementById("chapterSelect");
+    const versesDiv = document.getElementById("verses");
+    const resultsDiv = document.getElementById("results");
+    const searchInput = document.getElementById("searchInput");
+
+    // Заполнение списка книг
+    BibleAPI.getBooks().forEach(book => {
+        const opt = document.createElement("option");
+        opt.value = book.number;
+        opt.textContent = `${book.number}. ${book.name}`;
+        bookSelect.appendChild(opt);
+    });
+
+    function fillChapters() {
+        chapterSelect.innerHTML = "";
+        BibleAPI.getChapters(bookSelect.value).forEach(num => {
+            const opt = document.createElement("option");
+            opt.value = num;
+            opt.textContent = `Глава ${num}`;
+            chapterSelect.appendChild(opt);
+        });
+        showVerses();
+    }
+
+    function showVerses() {
+        versesDiv.innerHTML = "";
+        BibleAPI.getVerses(bookSelect.value, chapterSelect.value)
+            .forEach(v => {
+                const p = document.createElement("div");
+                p.className = "verse";
+                p.innerHTML = `<span>${v.number}</span> ${v.text}`;
+                versesDiv.appendChild(p);
+            });
+    }
+
+    function search() {
+        resultsDiv.innerHTML = "";
+        const q = searchInput.value.trim();
+        if (!q) return;
+        const found = BibleAPI.search(q);
+        if (!found.length) {
+            resultsDiv.textContent = "Нічого не знайдено.";
+            return;
+        }
+        found.forEach(r => {
+            const div = document.createElement("div");
+            div.className = "search-result";
+            div.innerHTML = `<b>${r.book} ${r.chapter}:${r.verse}</b> — ${r.text}`;
+            resultsDiv.appendChild(div);
+        });
+    }
+
+    bookSelect.addEventListener("change", fillChapters);
+    chapterSelect.addEventListener("change", showVerses);
+    document.getElementById("searchBtn").addEventListener("click", search);
+
+    fillChapters();
+}
+
+init();
+</script>
 </body>
 </html>
