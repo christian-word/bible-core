@@ -1,0 +1,92 @@
+﻿=========================
+ BibleAPI — Протокол обмена
+=========================
+
+1. ОБЩЕЕ ОПИСАНИЕ
+-----------------
+BibleAPI — это универсальный JavaScript-модуль для работы с Библией в формате JSON.
+Не зависит от HTML и может использоваться в браузере, Node.js, мобильных и серверных проектах.
+
+2. ФОРМАТ ФАЙЛА (bible_ua.json)
+-------------------------------
+[
+  {
+    "number": "1",
+    "shortName": "Gen",
+    "name": "Буття",
+    "chapters": [
+      {
+        "number": "1",
+        "verses": [
+          { "number": "1", "text": "На початку Бог створив Небо та землю." },
+          { "number": "2", "text": "..." }
+        ]
+      }
+    ]
+  }
+]
+
+3. МЕТОДЫ API
+-------------
+
+3.1. async load(url: string) : Promise<Object[]>
+    Загружает JSON-файл и сохраняет в BibleAPI.data.
+    Пример:
+        await BibleAPI.load("bible_ua.json");
+
+3.2. getBooks() : Array<{number, shortName, name}>
+    Возвращает список всех книг.
+    Пример:
+        BibleAPI.getBooks();
+
+3.3. getChapters(bookNumber) : string[]
+    Возвращает список номеров глав указанной книги.
+    Пример:
+        BibleAPI.getChapters(1);
+
+3.4. getVerses(bookNumber, chapterNumber)
+    Возвращает массив стихов главы.
+    Пример:
+        BibleAPI.getVerses(1, 1);
+
+3.5. getVerse(bookNumber, chapterNumber, verseNumber)
+    Возвращает один стих или null.
+    Пример:
+        BibleAPI.getVerse(1, 1, 1);
+
+3.6. search(query)
+    Ищет по тексту (без учёта регистра).
+    Пример:
+        BibleAPI.search("Бог");
+
+4. ПРИМЕР ИСПОЛЬЗОВАНИЯ
+-----------------------
+<script src="bible.js"></script>
+<script>
+(async () => {
+    await BibleAPI.load("bible_ua.json");
+    console.log("Книги:", BibleAPI.getBooks());
+    console.log("Главы книги 1:", BibleAPI.getChapters(1));
+    console.log("Стихи Буття 1:", BibleAPI.getVerses(1, 1));
+    console.log("Стих 1:1:", BibleAPI.getVerse(1, 1, 1));
+    console.log("Поиск 'Бог':", BibleAPI.search("Бог"));
+})();
+</script>
+
+5. ОШИБКИ
+---------
+- Неверные номера книги/главы/стиха → [] или null.
+- load() выбрасывает ошибку, если файл не найден.
+
+6. ОСОБЕННОСТИ
+--------------
+- Номера в JSON — строки.
+- Поиск нечувствителен к регистру.
+- API не рендерит HTML.
+
+7. ПЛАН РАСШИРЕНИЯ
+------------------
+- searchRegex(pattern)
+- getBookByName(name)
+- Ленивая загрузка
+- Мультиязычные версии
